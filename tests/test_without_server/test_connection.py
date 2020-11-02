@@ -439,7 +439,7 @@ class TestConnectionRunURLRequest(unittest.TestCase):
 class TestConnectionTestConnectionWithAuth(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        docker_tools.HPCCContainer(tag="6.4.26-1", users=("madeup", "complicated_password"))
+        docker_tools.HPCCContainer(users=("madeup", "complicated_password"))  #tag="6.4.26-1",
         cls.error_string = ("401 Client Error: Unauthorized for url: "
                             "http://localhost:8010/")
 

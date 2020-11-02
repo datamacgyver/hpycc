@@ -285,14 +285,15 @@ class Connection:
 
         try:
             result = self._run_command(base_cmd)
+
         except subprocess.SubprocessError as e:
             msg = "Failed to run ecl command"
             raise subprocess.SubprocessError(msg) from e
-        else:
-            if delete_workunit:
-                wuid = parse_wuid_from_xml(result.stdout)
-                delete.delete_workunit(self, wuid)
-            return result
+
+        if delete_workunit:
+            wuid = parse_wuid_from_xml(result.stdout)
+            delete.delete_workunit(self, wuid)
+        return result
 
     def run_url_request(self, url, max_attempts, max_sleep):
         """

@@ -2,7 +2,16 @@ hpycc Readme
 ============
 
 The hpycc package is intended to simplify the use of data stored on HPCC and make it easily available to both users and other servers through basic Python calls. Its long-term goal is to make access to and manipulation of HPCC data as quick and easy as any other type system. 
-   
+
+Docker Announcement
+-------------------
+HPCC seem to have pulled the images that this is based on. I've created one for the test environment I developed against
+but if you want ot dev against a different one you will need to build the relevent container. I've forked the old HPCC
+docker repo in case you need it or it gets removed: https://github.com/datamacgyver/docker-hpcc
+
+Note that in the docker files I've tried the wget for HPCC is broken. You can get the new ones from
+the HPCC website but there's a modified one in this repoo I used for the build.
+
 Documentation
 -------------
 The below readme and package documentation is available at https://hpycc.readthedocs.io/en/latest/

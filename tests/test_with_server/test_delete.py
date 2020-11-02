@@ -9,7 +9,7 @@ import re
 
 # noinspection PyPep8Naming
 def setUpModule():
-    docker_tools.HPCCContainer(tag="6.4.26-1")
+    docker_tools.HPCCContainer()  #tag="6.4.26-1"
 
 
 # noinspection PyPep8Naming

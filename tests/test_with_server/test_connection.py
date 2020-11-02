@@ -21,7 +21,7 @@ from hpycc.utils import docker_tools
 
 # noinspection PyPep8Naming
 def setUpModule():
-    docker_tools.HPCCContainer(tag="6.4.26-1")
+    docker_tools.HPCCContainer()  #tag="6.4.26-1"
 
 
 # noinspection PyPep8Naming
@@ -269,7 +269,7 @@ class TestConnectionGetLogicalFileChunkWithServer(unittest.TestCase):
             p = os.path.join(d, "data.csv")
             pd.DataFrame(dic).to_csv(p, index=False)
             lf_name = "test_get_logical_file_chunk_returns_correct_json_1"
-            hpycc.spray_file(conn, p, lf_name, chunk_size=3, delete_workunit=False)
+            hpycc.spray_file(conn, p, lf_name, chunk_size=3, delete_workunit=False, overwrite=True)
 
         result = conn.get_logical_file_chunk(
             "thor::{}".format(lf_name), 0, 2, 3, 2)
@@ -285,7 +285,7 @@ class TestConnectionGetLogicalFileChunkWithServer(unittest.TestCase):
         with TemporaryDirectory() as d:
             p = os.path.join(d, "data.csv")
             df.to_csv(p, index=False)
-            hpycc.spray_file(conn, p, "data", chunk_size=3, delete_workunit=False)
+            hpycc.spray_file(conn, p, "data", chunk_size=3, delete_workunit=False, overwrite=True)
 
         result = conn.get_logical_file_chunk("thor::data", 0, 1, 3, 0)
 

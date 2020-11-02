@@ -16,12 +16,12 @@ from passlib.apache import HtpasswdFile
 
 
 class HPCCContainer:
-    def __init__(self, tag="latest", name="hpycc_tests", users=None,
+    def __init__(self, tag="latest", name="hpycc_test_img", users=None,
                  pull=True, start=True):
         self.tag = tag
         self.client = docker.from_env()
         self.name = name
-        self.image = "hpccsystems/hpcc"
+        self.image = "datamacgyver/hpcc-6-4-40-1"
         if users:
             self.users = users
         else:
@@ -40,8 +40,7 @@ class HPCCContainer:
                 raise e
 
     def pull_image(self):
-        for line in self.client.api.pull(self.image,
-                                         tag=self.tag, stream=True):
+        for line in self.client.api.pull(self.image, tag=self.tag, stream=True):
             print(line.decode())
 
     def stop_container(self):
@@ -103,3 +102,7 @@ class HPCCContainer:
     def start_hpcc(self):
         self.container.exec_run("etc/init.d/hpcc-init start")
         time.sleep(20)
+
+
+if __name__ == '__main__':
+    HPCCContainer(tag="7.12.4-1")

@@ -7,9 +7,7 @@ Functions
 
 """
 from concurrent.futures import ThreadPoolExecutor, wait
-
 import pandas as pd
-
 from hpycc.delete import delete_logical_file
 from hpycc.utils.filechunker import make_chunks
 
@@ -119,7 +117,7 @@ def _stringify_rows(df, start_row, num_rows):
     return ','.join(
         ["{" + ','.join(i) + "}" for i in
          sliced_df.astype(str).values.tolist()]
-    )
+    ).encode('ascii', 'ignore').decode()
 
 
 def spray_file(connection, source_file, logical_file, overwrite=False,
@@ -172,6 +170,9 @@ def spray_file(connection, source_file, logical_file, overwrite=False,
 
     chunks = make_chunks(len(df), chunk_size=chunk_size)
 
+    print('Any unicode characters will be converted to ASCII, not saying you '
+          'have any, just warning you! If you are getting odd errors you may '
+          'want to deal with your UTF before spraying.')
     stringified_rows = (_stringify_rows(df, start_row, num_rows)
                         for start_row, num_rows in chunks)
 
@@ -185,6 +186,7 @@ def spray_file(connection, source_file, logical_file, overwrite=False,
                             record_set, name, overwrite, delete_workunit)
             for row, name in zip(stringified_rows, target_names)]
         _, __ = wait(futures)
+        _ = [f.result() for f in futures]
 
     _concatenate_logical_files(connection, target_names, logical_file, record_set, overwrite, expire, delete_workunit)
 
@@ -253,3 +255,20 @@ def _concatenate_logical_files(connection, to_concat, logical_file, record_set,
     script = script.format(read_files, logical_file)
 
     connection.run_ecl_string(script, True, delete_workunit=delete_workunit, stored=None)
+
+
+if __name__ == '__main__':
+    from hpycc.connection import Connection
+    import pandas as pd
+    from hpycc import spray_file
+
+    con = Connection('hpcc', password="password", server="localhost", port=8010,
+                     repo='C:\z\dapper')
+
+    file_name = "https://gist.githubusercontent.com/jncraton" \
+                "/68beb88e6027d9321373/raw" \
+                "/381dcf8c0d4534d420d2488b9c60b1204c9f4363/starwars.csv"
+    df = pd.read_csv(file_name)
+    df.head()
+    spray_file(con, df, '~ROB::TEMP::SWCOLLECTABLES.CSV', expire=1,
+                     delete_workunit=False)

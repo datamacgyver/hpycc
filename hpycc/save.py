@@ -1,4 +1,7 @@
 """
+**TEMPORARILY DEPRICATED! Just use get and save teh result. Trust us, it's
+cleaner**
+
 Functions to get data out of an HPCC instance and save
 them to disk.
 
@@ -152,7 +155,7 @@ def save_thor_file(connection, thor_file, path_or_buf=None,
         The true sleep time is a random int between `max_sleep` and
         `max_sleep` * 0.75.
     dtype: type name or dict of col -> type, optional
-        Data type for data or columns. E.g. {‘a’: np.float64, ‘b’:
+        Data type for data or columns. E.g. {'a': np.float64, 'b':
         np.int32}. If converters are specified, they will be applied
         INSTEAD of dtype conversion. If None, or columns are missing
         from the provided dict, they will be converted to one of
